@@ -1,0 +1,4 @@
+wget
+torch
+torchvision
+pillow
