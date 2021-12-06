@@ -20,7 +20,7 @@ n_classes = len(idx_to_class.keys())  # number of breeds classes
 
 # Note that I only save `fc` layer weights, and not the whole model.
 # torch.save(model.fc.state_dict(), "fc.pt")
-@st.cache
+@st.cache(suppress_st_warning=True)
 def load_model():
     model = models.inception_v3(pretrained=True)
     model.fc = nn.Sequential(
@@ -32,6 +32,7 @@ def load_model():
 
 model = load_model()
 
+@st.cache(suppress_st_warning=True)
 def predict(path: str):
     """Predict from a given path"""
     img = Image.open(path)
@@ -43,6 +44,9 @@ def predict(path: str):
 
 
 st.title("Dog Breed Classification")
+st.write("""
+🐶🐶🐶 Upload your dog image (or even yourself) to see what breed it is. 🐶🐶🐶
+""")
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
