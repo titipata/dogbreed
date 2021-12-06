@@ -17,15 +17,20 @@ transform = transforms.Compose(
 class_to_idx = json.load(open("class_to_idx.json", "r"))
 idx_to_class = {v: k for k, v in class_to_idx.items()}
 n_classes = len(idx_to_class.keys())  # number of breeds classes
-model = models.inception_v3(pretrained=True)
-model.fc = nn.Sequential(
-    nn.Linear(2048, 512), nn.ReLU(), nn.Dropout(0.3), nn.Linear(512, n_classes)
-)
+
 # Note that I only save `fc` layer weights, and not the whole model.
 # torch.save(model.fc.state_dict(), "fc.pt")
-MODEL_PATH = "fc.pt"
-model.fc.load_state_dict(torch.load(MODEL_PATH))
+@st.cache
+def load_model():
+    model = models.inception_v3(pretrained=True)
+    model.fc = nn.Sequential(
+        nn.Linear(2048, 512), nn.ReLU(), nn.Dropout(0.3), nn.Linear(512, n_classes)
+    )
+    MODEL_PATH = "fc.pt"
+    model.fc.load_state_dict(torch.load(MODEL_PATH))
+    return model
 
+model = load_model()
 
 def predict(path: str):
     """Predict from a given path"""
