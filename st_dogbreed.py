@@ -19,6 +19,7 @@ idx_to_class = {v: k for k, v in class_to_idx.items()}
 n_classes = len(idx_to_class.keys())  # number of breeds classes
 
 # Note that I only save `fc` layer weights, and not the whole model.
+# model was trained and the linear classifier is saved as follows:
 # torch.save(model.fc.state_dict(), "fc.pt")
 @st.cache(suppress_st_warning=True)
 def load_model():
